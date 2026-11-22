@@ -1,0 +1,5 @@
+setup,queries,recall_at_1,recall_at_5,mrr,ensemble_accuracy,ensemble_coverage
+multilingual-e5-base,250,0.348,0.728,0.5118973355911345,,
+BGE-M3,250,0.548,0.832,0.6704390775890775,,
+LaBSE,250,0.228,0.444,0.33087986999432395,,
+"three-model RRF (approved passages, 2-of-3 support)",250,,,,0.472,1.0

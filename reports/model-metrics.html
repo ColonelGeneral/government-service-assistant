@@ -1,0 +1,89 @@
+<section id="government-service-model-metrics" data-viz-composition>
+  <div data-viz-container></div>
+  <script type="application/json" data-viz-chart>
+    {
+      "charts": [
+        {
+          "id": "scheme-field-accuracy",
+          "title": "Top-1 scheme + field accuracy",
+          "description": "Exact match of predicted scheme and field across 250 synthetic held-out questions.",
+          "height": 280,
+          "spec": {
+            "type": "bar",
+            "x": "model",
+            "y": "rate",
+            "xLabel": "Model",
+            "yLabel": "Accuracy",
+            "startAtZero": true,
+            "yDomain": [0, 1],
+            "showValues": true,
+            "valueFormat": { "style": "percent", "maximumFractionDigits": 1 }
+          },
+          "columns": ["model", "rate"],
+          "rows": [
+            ["E5", 0.392],
+            ["BGE-M3", 0.624],
+            ["LaBSE", 0.332]
+          ]
+        },
+        {
+          "id": "scheme-field-macro-precision",
+          "title": "Macro precision",
+          "description": "Class-wise precision averaged over observed or predicted scheme-field pairs; 250 synthetic questions.",
+          "height": 280,
+          "spec": {
+            "type": "bar",
+            "x": "model",
+            "y": "rate",
+            "xLabel": "Model",
+            "yLabel": "Macro precision",
+            "startAtZero": true,
+            "yDomain": [0, 1],
+            "showValues": true,
+            "valueFormat": { "style": "percent", "maximumFractionDigits": 1 }
+          },
+          "columns": ["model", "rate"],
+          "rows": [
+            ["E5", 0.25132275132275134],
+            ["BGE-M3", 0.46189024390243905],
+            ["LaBSE", 0.20085470085470084]
+          ]
+        },
+        {
+          "id": "approved-evidence-recall",
+          "title": "Approved evidence recall",
+          "description": "Recall@1 and Recall@5 for finding approved evidence matching the expected scheme and field across 250 synthetic questions.",
+          "height": 280,
+          "spec": {
+            "type": "bar",
+            "x": "model",
+            "y": "rate",
+            "series": "cutoff",
+            "xLabel": "Model",
+            "yLabel": "Recall",
+            "startAtZero": true,
+            "yDomain": [0, 1],
+            "showValues": true,
+            "showLegend": true,
+            "valueFormat": { "style": "percent", "maximumFractionDigits": 1 }
+          },
+          "columns": ["model", "cutoff", "rate"],
+          "rows": [
+            ["E5", "Recall@1", 0.348],
+            ["E5", "Recall@5", 0.728],
+            ["BGE-M3", "Recall@1", 0.548],
+            ["BGE-M3", "Recall@5", 0.832],
+            ["LaBSE", "Recall@1", 0.228],
+            ["LaBSE", "Recall@5", 0.444]
+          ]
+        }
+      ]
+    }
+  </script>
+</section>
+<script type="module">
+  import { mountChart } from "https://persistent.oaistatic.com/plugins/visualize/charts/1.8.1/element.js";
+  const root = document.getElementById("government-service-model-metrics");
+  const config = JSON.parse(root.querySelector("[data-viz-chart]").textContent);
+  mountChart(root.querySelector("[data-viz-container]"), config);
+</script>
