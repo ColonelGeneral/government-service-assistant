@@ -16,15 +16,22 @@ def _tokens(text):
     return tuple(sorted(set(re.findall(r"\d[\d,.]*(?:%| रुपये| rupees)?", str(text).lower()))))
 
 
-def retrieve_ensemble(query, language, records, schemes, index_root, top_n=8):
-    scheme_id, resolution, scheme_options = resolve_scheme(query, schemes)
+def retrieve_ensemble(query, language, records, schemes, index_root, top_n=8, selected_scheme_id=None):
+    if selected_scheme_id is not None:
+        selected = next((s for s in schemes if s["scheme_id"] == selected_scheme_id), None)
+        if selected is None:
+            return {"status":"invalid_scheme_selection","message":"That scheme selection is no longer available. Please submit the question again.","models":[]}
+        scheme_id, resolution, scheme_options = selected_scheme_id, "user_selected", [selected_scheme_id]
+    else:
+        scheme_id, resolution, scheme_options = resolve_scheme(query, schemes)
     if not scheme_id:
-        options = [s["scheme_name"] for s in schemes if s["scheme_id"] in scheme_options]
+        option_names = [s["scheme_name"] for s in schemes if s["scheme_id"] in scheme_options]
         if resolution == "ambiguous":
-            msg = "More than one scheme matches that name. Choose the specific scheme: " + "; ".join(options[:8])
+            msg = "More than one scheme matches that name. Choose the specific scheme from the options shown."
         else:
             msg = "I couldn't identify a scheme from this question. Include its official scheme name or short title."
-        return {"status":resolution,"message":msg,"scheme_options":options,"models":[]}
+        return {"status":resolution,"message":msg,"scheme_options":scheme_options,
+                "scheme_option_names":option_names,"models":[]}
     intent = detect_intent(query)
     if not intent:
         return {"status":"intent_missing","message":"Please say what you need: eligibility, benefits, documents, or application process.","models":[]}

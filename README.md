@@ -1,6 +1,6 @@
 # Government-Service Assistant — Three-Model Ensemble
 
-This is a new project build based on the supplied workflow. For every identifiable scheme question, the app runs the same query through **all three** models—multilingual-e5-base, BGE-M3, and LaBSE—compares their retrieved passages, and selects reviewed source evidence using reciprocal-rank fusion. It requires the same reviewed fact to appear in at least two models' top results. If the scheme is ambiguous, evidence is missing, the requested language is unreviewed, or sources conflict, it explains the issue instead of guessing.
+This is a new project build based on the supplied workflow. For every identifiable scheme question, the app runs the same query through **all three** models—multilingual-e5-base, BGE-M3, and LaBSE—compares their retrieved passages, and selects reviewed source evidence using reciprocal-rank fusion. It requires the same reviewed fact to appear in at least two models' top results. If the scheme name matches multiple programs, the app asks the user to choose using the title, short title, state, or ministry, then continues the original question with that selection. If evidence is missing, the requested language is unreviewed, or sources conflict, it explains the issue instead of guessing.
 
 ## Run on Windows
 
