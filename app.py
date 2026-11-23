@@ -27,7 +27,7 @@ if source_csv.exists():
             if sid in scheme_by_id:
                 # Display context helps people distinguish similarly named schemes.
                 scheme_by_id[sid].update({key: row.get(key, "") for key in (
-                    "short_title", "level", "state", "ministry", "department", "beneficiary_type", "target_beneficiaries"
+                    "short_title", "level", "state", "ministry", "department", "beneficiary_type", "target_beneficiaries", "source_url"
                 )})
 
 with st.sidebar:
@@ -76,6 +76,12 @@ if active_query:
         st.warning("I found several similarly named schemes. Select the one you mean to continue. / मिलते-जुलते नाम वाली कई योजनाएँ मिलीं। आगे बढ़ने के लिए सही योजना चुनें।")
         option_ids = result.get("scheme_options", [])
 
+        for sid in option_ids:
+            item = scheme_by_id.get(sid, {"scheme_name":sid})
+            source_url = item.get("source_url", "").strip()
+            if source_url:
+                st.markdown(f"- **{item.get('scheme_name', sid)}** — [Official scheme page / योजना का आधिकारिक पृष्ठ]({source_url})")
+
         def scheme_label(sid):
             item = scheme_by_id.get(sid, {"scheme_name":sid})
             details = [item.get(k, "").strip() for k in ("short_title", "level", "state", "ministry", "department") if item.get(k, "").strip()]
@@ -99,8 +105,6 @@ if active_query:
         st.write(fact["text"])
         checked = fact.get("checked_at") or "not independently date-checked"
         st.caption(f"Topic: {fact['field'].replace('_',' ').title()} · Source: {fact['source_name']} · Source check: {checked} · Support: {result['support']}/3 models")
-        if fact.get("source_url"):
-            st.markdown(f"[Open source page]({fact['source_url']})")
     elif status == "verified_language_missing":
         st.warning(result["message"])
         for fact in result.get("english_evidence", []):
@@ -117,6 +121,11 @@ if active_query:
                 st.markdown(f"[Open source]({fact['source_url']})")
     else:
         st.warning(result.get("message", "No safe result could be selected."))
+
+    result_scheme_id = result.get("scheme_id") or selected_scheme_id
+    scheme_url = scheme_by_id.get(result_scheme_id, {}).get("source_url", "").strip()
+    if scheme_url:
+        st.markdown(f"[Official scheme page / योजना का आधिकारिक पृष्ठ]({scheme_url})")
 
     model_results = result.get("models", [])
     if model_results:
