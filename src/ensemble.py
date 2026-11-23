@@ -48,7 +48,17 @@ def retrieve_ensemble(query, language, records, schemes, index_root, top_n=8, se
     # Query candidates are restricted to the resolved scheme and requested field.
     ids = [i for i,r in enumerate(records) if r["scheme_id"] == scheme_id and r["field"] == intent]
     if not ids:
-        return {"status":"field_missing","scheme_id":scheme_id,"message":"This dataset has no record for that scheme and topic.","models":[]}
+        if language == "hi":
+            msg = (
+                "इस योजना के बारे में मांगी गई जानकारी अभी उपलब्ध नहीं है। हम अपने ज्ञान-आधार का विस्तार कर रहे हैं "
+                "और यह जानकारी जल्द उपलब्ध कराने का प्रयास करेंगे। कृपया बाद में फिर देखें।"
+            )
+        else:
+            msg = (
+                "We don't have this information for the scheme yet. We're expanding our knowledge base and "
+                "working to add it soon. Please check back later."
+            )
+        return {"status":"field_missing","scheme_id":scheme_id,"message":msg,"models":[]}
     digest = hashlib.sha256("\n".join(r["record_id"] for r in records).encode()).hexdigest()
     model_results = []
     for name, model_id in MODEL_IDS.items():
